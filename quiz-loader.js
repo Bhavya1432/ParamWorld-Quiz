@@ -4,7 +4,7 @@
 
 (function () {
 
-  var BASE_URL = "https://YOUR-USERNAME.github.io/ParamWorld-Quiz/";
+  var BASE_URL = "https://bhavya1432.github.io/ParamWorld-Quiz/";
 
   var DATA_FILES = [
     "QUIZ_DATA/ASSISTANT_TEACHER/Hindi/PYQ_2023_SET_A.js"
