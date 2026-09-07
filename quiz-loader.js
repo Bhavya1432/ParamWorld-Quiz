@@ -1,48 +1,135 @@
-/* ParamWorld Quiz Data Loader
-   ONE-TIME SETUP: change BASE_URL after GitHub Pages is ready.
-*/
+/* =========================================================
+   ParamWorld Quiz Data Loader
+   Loads all quiz data files before the quiz application starts
+   ========================================================= */
 
 (function () {
+    "use strict";
 
-  var BASE_URL = "https://bhavya1432.github.io/ParamWorld-Quiz/";
+    /* GitHub Pages project root */
+    var BASE_URL =
+        "https://bhavya1432.github.io/ParamWorld-Quiz/";
 
-  var DATA_FILES = [
-    "QUIZ_DATA/ASSISTANT_TEACHER/Hindi/PYQ_2023_SET_A.js"
-  ];
+    /* Quiz data files */
+    var DATA_FILES = [
+        "QUIZ_DATA/ASSISTANT_TEACHER/Hindi/PYQ_2023_SET_A.js"
+    ];
 
-  window.ParamWorldQuizData = window.ParamWorldQuizData || {};
+    /*
+     * Global quiz data object
+     */
+    window.ParamWorldQuizData =
+        window.ParamWorldQuizData || {};
 
-  function loadScript(url) {
-    return new Promise(function (resolve, reject) {
+    /*
+     * Load one JavaScript data file
+     */
+    function loadScript(url) {
 
-      var s = document.createElement("script");
+        return new Promise(function (resolve, reject) {
 
-      s.src = url;
-      s.async = false;
+            var script =
+                document.createElement("script");
 
-      s.onload = resolve;
+            script.src = url;
+            script.async = false;
 
-      s.onerror = function () {
-        reject(
-          new Error("Quiz data failed to load: " + url)
+            script.onload = function () {
+
+                /*
+                 * Your data file currently creates:
+                 *
+                 * var QUIZ_DATA = {...};
+                 *
+                 * Copy that data into the engine's
+                 * global data object.
+                 */
+                if (
+                    typeof window.QUIZ_DATA !== "undefined" &&
+                    window.QUIZ_DATA
+                ) {
+
+                    Object.assign(
+                        window.ParamWorldQuizData,
+                        window.QUIZ_DATA
+                    );
+
+                }
+
+                resolve(url);
+            };
+
+            script.onerror = function () {
+
+                reject(
+                    new Error(
+                        "Quiz data failed to load: " + url
+                    )
+                );
+
+            };
+
+            document.head.appendChild(script);
+
+        });
+    }
+
+    /*
+     * Load all configured quiz data files
+     * sequentially.
+     */
+    window.PARAMWORLD_QUIZ_READY =
+        DATA_FILES.reduce(
+
+            function (promise, file) {
+
+                return promise.then(
+                    function () {
+
+                        return loadScript(
+                            BASE_URL + file
+                        );
+
+                    }
+                );
+
+            },
+
+            Promise.resolve()
+
         );
-      };
 
-      document.head.appendChild(s);
-    });
-  }
+    /*
+     * Final status promise
+     */
+    window.PARAMWORLD_QUIZ_READY.then(
 
-  window.PARAMWORLD_QUIZ_READY = DATA_FILES.reduce(
-    function (promise, file) {
+        function () {
 
-      return promise.then(function () {
+            console.log(
+                "ParamWorld Quiz Data Loaded Successfully"
+            );
 
-        return loadScript(BASE_URL + file);
+            console.log(
+                "Total Quiz Sets:",
+                Object.keys(
+                    window.ParamWorldQuizData
+                ).length
+            );
 
-      });
+        }
 
-    },
-    Promise.resolve()
-  );
+    ).catch(
+
+        function (error) {
+
+            console.error(
+                "ParamWorld Quiz Data Loader Error:",
+                error
+            );
+
+        }
+
+    );
 
 })();
