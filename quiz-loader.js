@@ -12,7 +12,9 @@
 
     /* Quiz data files */
     var DATA_FILES = [
-        "QUIZ_DATA/ASSISTANT_TEACHER/Hindi/PYQ_2023_SET_A.js"
+        "QUIZ_DATA/ASSISTANT_TEACHER/Hindi/PYQ_2023_SET_A.js",
+        "QUIZ_DATA/ASSISTANT_TEACHER/CDP/PYQ_2023_SET_A_CDP.js"
+
     ];
 
     /*
